@@ -795,8 +795,11 @@ VoidResult FtpClientModule::upload_file_sync(const std::string& local_path, cons
 // Directory synchronization planner and executor
 // ═════════════════════════════════ transfers
 
-Result<std::vector<FtpClientModule::SyncPlanEntry>>
-FtpClientModule::plan_sync(
+auto FtpClientModule::plan_sync(
+    const std::string& remote_root,
+    const std::string& local_root,
+    SyncDirection direction
+) -> Result<std::vector<SyncPlanEntry>>
     const std::string& remote_root,
     const std::string& local_root,
     SyncDirection direction
@@ -941,3 +944,4 @@ FtpClientModule::list_local_recursive(const std::string& root) {
 }
 
 } // namespace material_everything
+

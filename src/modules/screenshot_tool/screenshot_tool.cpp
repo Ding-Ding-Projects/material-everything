@@ -1,14 +1,34 @@
 #include "screenshot_tool.hpp"
+#include <thread>
+#include <windows.h>
 
 #include <algorithm>
+#include <thread>
+#include <windows.h>
 #include <cmath>
+#include <thread>
+#include <windows.h>
 #include <cstring>
+#include <thread>
+#include <windows.h>
 #include <ctime>
+#include <thread>
+#include <windows.h>
 #include <fstream>
+#include <thread>
+#include <windows.h>
 #include <iomanip>
+#include <thread>
+#include <windows.h>
 #include <limits>
+#include <thread>
+#include <windows.h>
 #include <sstream>
+#include <thread>
+#include <windows.h>
 #include <stdexcept>
+#include <thread>
+#include <windows.h>
 
 namespace me::screenshot_tool {
 namespace {
@@ -603,3 +623,4 @@ std::vector<ToolbarItem> ScreenshotTool::materialToolbar() {
          AnnotationKind::Rectangle, "#4F378B", "#FFFFFF", false},
     };
 }
+} // namespace me::screenshot_tool
