@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 build/
 dist/
 *.o
@@ -10,3 +11,6 @@ __pycache__/
 *.user
 .vs/
 .idea/
+=======
+build-pdf-reader-v2/
+>>>>>>> feat/pdf-reader
