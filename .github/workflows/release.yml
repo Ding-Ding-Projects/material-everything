@@ -1,0 +1,78 @@
+name: Build and Release
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    outputs:
+      started: ${{ steps.timing.outputs.started }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Record workflow start time
+        id: timing
+        shell: bash
+        run: echo "started=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_OUTPUT
+
+      - name: Install Qt6
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.7.0'
+          host: 'windows'
+          target: 'desktop'
+
+      - name: Install vcpkg dependencies
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git ${{ github.workspace }}/vcpkg --depth=1
+          & "${{ github.workspace }}/vcpkg/bootstrap-vcpkg.bat"
+          & "${{ github.workspace }}/vcpkg/vcpkg install openssl libarchive libgit2 sqlite3 --triplet x64-windows
+
+      - name: Configure CMake
+        run: cmake -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Package with Squirrel.Windows
+        if: always()
+        shell: pwsh
+        run: |
+          Write-Host "Squirrel.Windows packaging placeholder — will be wired once app shell builds"
+          # TODO: NuGet squirrel.windows, produce Setup.exe, RELEASES, .nupkg
+
+      - name: Create unique tag
+        if: success()
+        shell: pwsh
+        run: |
+          $tag = "v0.1.$(Get-Random -Maximum 99999)-$(Get-Date -Format yyyyMMddHHmmss)"
+          echo "TAG=$tag" >> $env:GITHUB_ENV
+          git tag $tag
+          git push origin $tag
+
+      - name: Publish Release
+        if: success()
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.TAG }}
+          name: Material Everything ${{ env.TAG }}
+          body: |
+            ## Material Everything ${{ env.TAG }}
+
+            Unified C++ desktop application containing every popular open-source app as a Material Design 3 module.
+
+            **Workflow started:** ${{ steps.timing.outputs.started }}
+            **Modules integrated:** See DING_DING_PROJECTS_MAPPING.md
+
+            *Unsigned Squirrel.Windows installer. May trigger Windows SmartScreen warning.*
+          draft: false
+          files: dist/squirrel-windows/Setup.exe
+          generate_release_notes: true
