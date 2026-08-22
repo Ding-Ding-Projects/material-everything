@@ -9,6 +9,19 @@
 #include <limits>
 #include <sstream>
 #include <stdexcept>
+#include <thread>
+
+// The Windows capture provider intentionally includes the platform headers in
+// this translation unit only, so the public API remains dependency-free.
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#endif
 
 namespace me::screenshot_tool {
 namespace {
@@ -95,10 +108,16 @@ void drawRectangleOutline(Image& image, const Rect& bounds, std::uint8_t r,
     const int top = static_cast<int>(bounds.origin.y);
     const int right = static_cast<int>(bounds.origin.x + bounds.size.width);
     const int bottom = static_cast<int>(bounds.origin.y + bounds.size.height);
-    drawLine(image, {left, top}, {right, top}, r, g, b);
-    drawLine(image, {right, top}, {right, bottom}, r, g, b);
-    drawLine(image, {right, bottom}, {left, bottom}, r, g, b);
-    drawLine(image, {left, bottom}, {left, top}, r, g, b);
+    const Point topLeft{static_cast<double>(left), static_cast<double>(top)};
+    const Point topRight{static_cast<double>(right), static_cast<double>(top)};
+    const Point bottomRight{static_cast<double>(right),
+                            static_cast<double>(bottom)};
+    const Point bottomLeft{static_cast<double>(left),
+                           static_cast<double>(bottom)};
+    drawLine(image, topLeft, topRight, r, g, b);
+    drawLine(image, topRight, bottomRight, r, g, b);
+    drawLine(image, bottomRight, bottomLeft, r, g, b);
+    drawLine(image, bottomLeft, topLeft, r, g, b);
 }
 
 void fillRectangle(Image& image, const Rect& bounds, std::uint8_t alpha) {
@@ -263,6 +282,9 @@ std::vector<std::uint8_t> encodeBmp(const Image& image) {
     const std::uint32_t pixelBytes = rowBytes * height;
     const std::uint32_t fileBytes = 54U + pixelBytes;
 
+    std::vector<std::uint8_t> bytes;
+    bytes.reserve(fileBytes);
+
     auto append16 = [&](std::uint16_t value) {
         bytes.push_back(static_cast<std::uint8_t>(value));
         bytes.push_back(static_cast<std::uint8_t>(value >> 8));
@@ -272,8 +294,6 @@ std::vector<std::uint8_t> encodeBmp(const Image& image) {
             bytes.push_back(static_cast<std::uint8_t>(value >> shift));
         }
     };
-    std::vector<std::uint8_t> bytes;
-    bytes.reserve(fileBytes);
     bytes.insert(bytes.end(), {'B', 'M'});
     append32(fileBytes);
     append32(0);
@@ -325,7 +345,7 @@ std::vector<std::uint8_t> encodeImage(const Image& image, ExportFormat format) {
 class WindowsCaptureSession {
 public:
     explicit WindowsCaptureSession(const CaptureRequest& request)
-        : desktop_(GetDC(nullptr)), windowContext_() {}
+        : desktop_(GetDC(nullptr)) {}
 
     ~WindowsCaptureSession() {
         if (desktop_) ReleaseDC(nullptr, desktop_);
@@ -339,8 +359,14 @@ public:
             if (!window || !IsWindow(window) || !GetWindowRect(window, &bounds)) {
                 throw std::runtime_error("target window is unavailable");
             }
-        } else if (!GetVirtualScreenRect(bounds)) {
-            throw std::runtime_error("virtual screen is unavailable");
+        } else {
+            bounds.left = GetSystemMetrics(SM_XVIRTUALSCREEN);
+            bounds.top = GetSystemMetrics(SM_YVIRTUALSCREEN);
+            bounds.right = bounds.left + GetSystemMetrics(SM_CXVIRTUALSCREEN);
+            bounds.bottom = bounds.top + GetSystemMetrics(SM_CYVIRTUALSCREEN);
+            if (bounds.right <= bounds.left || bounds.bottom <= bounds.top) {
+                throw std::runtime_error("virtual screen is unavailable");
+            }
         }
 
         Rect source{{static_cast<double>(bounds.left),
@@ -603,3 +629,5 @@ std::vector<ToolbarItem> ScreenshotTool::materialToolbar() {
          AnnotationKind::Rectangle, "#4F378B", "#FFFFFF", false},
     };
 }
+
+}  // namespace me::screenshot_tool

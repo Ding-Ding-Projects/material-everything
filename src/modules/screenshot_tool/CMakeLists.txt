@@ -1,3 +1,6 @@
+cmake_minimum_required(VERSION 3.24)
+project(screenshot_tool LANGUAGES CXX)
+
 add_library(screenshot_tool STATIC
   screenshot_tool.cpp
 )
