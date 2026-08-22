@@ -1,7 +1,10 @@
 #include "video_editor.hpp"
+#include <numeric>
 
 #include <algorithm>
+#include <numeric>
 #include <stdexcept>
+#include <numeric>
 
 namespace material_everything::video_editor {
 
@@ -36,7 +39,7 @@ bool Timeline::remove_clip(const std::string& clip_id)
 bool Timeline::split_clip(const std::string& clip_id, Milliseconds timeline_offset)
 {
     for (auto it = clips_.begin(); it != clips_.end(); ++it) {
-        const auto start = std::next(clips_.begin(), std::distance(clips_.cbegin(), it));
+        const auto start = std::next(clips_.begin(), std::distance(clips_.begin(), it));
         (void)start;
         Milliseconds clip_start{0};
         for (auto prior = clips_.begin(); prior != it; ++prior) {
