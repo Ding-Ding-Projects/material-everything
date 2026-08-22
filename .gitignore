@@ -1,0 +1,12 @@
+build/
+dist/
+*.o
+*.obj
+*.lib
+*.dll
+*.exe
+node_modules/
+__pycache__/
+*.user
+.vs/
+.idea/
