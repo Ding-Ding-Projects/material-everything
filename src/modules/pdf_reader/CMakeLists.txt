@@ -1,3 +1,6 @@
+cmake_minimum_required(VERSION 3.24)
+project(material_everything_pdf_reader LANGUAGES CXX)
+
 add_library(material_everything_pdf_reader STATIC
     pdf_reader.cpp
 )
