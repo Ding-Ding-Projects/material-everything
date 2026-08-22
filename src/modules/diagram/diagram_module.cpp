@@ -7,6 +7,8 @@
 
 namespace me::diagram {
 
+static constexpr double kGrid = 16.0;
+
 static double snap(double v) { return std::round(v / kGrid) * kGrid; }
 
 int DiagramModule::addShape(ShapeKind kind, double x, double y, std::string label) {

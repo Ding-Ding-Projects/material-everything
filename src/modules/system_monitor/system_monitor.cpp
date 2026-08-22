@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include "system_monitor.hpp"
 
 #include <algorithm>
