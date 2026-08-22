@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Material Everything — one Material Design 3 desktop suite combining 27 open-source-inspired modules.">
+  <title>Material Everything</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="top-bar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">◆</span>
+      <h1 class="brand-name">Material Everything</h1>
+    </div>
+    <nav class="tab-strip" role="tablist" aria-label="Main navigation">
+      <button role="tab" aria-selected="true" aria-controls="panel-home" id="tab-home">Home</button>
+      <button role="tab" aria-selected="false" aria-controls="panel-features" id="tab-features">Features</button>
+      <button role="tab" aria-selected="false" aria-controls="panel-docs" id="tab-docs">Docs</button>
+      <button role="tab" aria-selected="false" aria-controls="panel-changelog" id="tab-changelog">Changelog</button>
+      <button role="tab" aria-selected="false" aria-controls="panel-about" id="tab-about">About</button>
+    </nav>
+    <div class="header-actions">
+      <div class="search-wrap">
+        <label for="site-search" class="visually-hidden">Search the site</label>
+        <input type="text" id="site-search" placeholder="Search…" autocomplete="off">
+        <button id="regex-btn" class="icon-btn" title="Open regex builder" aria-label="Open regex builder">.*</button>
+        <div id="search-results" class="popover hidden" role="listbox" aria-label="Search results"></div>
+        <div id="regex-builder" class="popover hidden" aria-labelledby="rb-title">
+          <h3 id="rb-title">Regex builder</h3>
+          <input type="text" id="rb-pattern" placeholder="Pattern e.g. ^pdf|editor$" aria-label="Regex pattern">
+          <div class="flag-row">
+            <label><input type="checkbox" id="rb-i"> Ignore case</label>
+            <label><input type="checkbox" id="rb-m"> Multiline</label>
+          </div>
+          <p id="rb-status" aria-live="polite"></p>
+          <button id="rb-apply">Apply to search</button>
+          <button id="rb-close" class="ghost">Close</button>
+        </div>
+      </div>
+      <button id="theme-toggle" class="icon-btn" title="Toggle light / dark theme" aria-label="Toggle theme">◐</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="panel-home" role="tabpanel" aria-labelledby="tab-home" tabindex="0">
+      <div class="hero">
+        <p class="eyebrow">One C++ desktop suite · 27 modules · Material Design 3</p>
+        <h2>Everything you need,<br>beautifully unified.</h2>
+        <p class="lede">Material Everything combines a browser, editors, media tools, developer utilities and more into one native C++ application — built on Qt with a pure Material Design 3 interface.</p>
+        <div class="cta-row">
+          <a class="btn filled" href="#download-note">Download for Windows</a>
+          <a class="btn outlined" href="#" data-goto="features">Explore features</a>
+        </div>
+        <p id="download-note" class="note">Installer coming soon — this site will link the verified release asset when it publishes.</p>
+      </div>
+      <div class="stat-row">
+        <div class="card stat"><strong>27</strong><span>modules</span></div>
+        <div class="card stat"><strong>C++</strong><span>native core</span></div>
+        <div class="card stat"><strong>M3</strong><span>design system</span></div>
+        <div class="card stat"><strong>100%</strong><span>local assets</span></div>
+      </div>
+      <div class="grid feature-preview" id="home-modules"></div>
+    </section>
+
+    <section id="panel-features" role="tabpanel" aria-labelledby="tab-features" tabindex="0" class="hidden">
+      <h2>All 27 modules</h2>
+      <p class="lede">Every module is a first-class surface inside the same shell, sharing one design system, one settings store and one command palette.</p>
+      <input type="search" id="module-filter" placeholder="Filter modules…" aria-label="Filter modules">
+      <div class="grid" id="feature-grid"></div>
+    </section>
+
+    <section id="panel-docs" role="tabpanel" aria-labelledby="tab-docs" tabindex="0" class="hidden">
+      <div class="docs-layout">
+        <aside class="docs-nav" aria-label="Documentation contents"><ul id="doc-list"></ul></aside>
+        <article id="doc-article" class="doc-article"></article>
+      </div>
+    </section>
+
+    <section id="panel-changelog" role="tabpanel" aria-labelledby="tab-changelog" tabindex="0" class="hidden">
+      <h2>Changelog</h2>
+      <div class="filter-row">
+        <input type="date" id="cl-date" aria-label="Filter by date">
+        <input type="text" id="cl-text" placeholder="Filter entries…" aria-label="Filter changelog text">
+        <select id="cl-type" aria-label="Filter by change type">
+          <option value="">All types</option>
+          <option value="feature">Feature</option>
+          <option value="fix">Fix</option>
+          <option value="release">Release</option>
+        </select>
+      </div>
+      <div id="changelog"></div>
+    </section>
+
+    <section id="panel-about" role="tabpanel" aria-labelledby="tab-about" tabindex="0" class="hidden">
+      <h2>About</h2>
+      <p>Material Everything is an independent C++/Qt desktop suite inspired by the workflows of popular open-source applications, rebuilt around a single Material Design 3 shell.</p>
+      <p>This documentation site is static, dependency-free and fully local — no CDN, no analytics, no tracking.</p>
+      <div class="card"><h3>Project links</h3><ul><li>Repository: Ding-Ding-Projects/material-everything</li><li>License: see repository</li><li>Releases: GitHub Releases (when published)</li></ul></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><strong>Material Everything</strong> · Static docs · No trackers · © 2026 Ding-Ding Projects</p>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
