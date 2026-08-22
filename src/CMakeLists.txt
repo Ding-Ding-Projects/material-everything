@@ -1,5 +1,5 @@
 file(GLOB MODULE_DIRS LIST_DIRECTORIES true ${CMAKE_CURRENT_SOURCE_DIR}/modules/*)
-set(EXCLUDED_MODULES screenshot_tool ftp_client video_editor media_player database_client presentation terminal)
+set(EXCLUDED_MODULES screenshot_tool ftp_client video_editor media_player database_client presentation terminal vector_graphics word_processor)
 foreach(DIR ${MODULE_DIRS})
     get_filename_component(MOD_NAME ${DIR} NAME)
     if(IS_DIRECTORY ${DIR} AND EXISTS ${DIR}/CMakeLists.txt AND NOT MOD_NAME IN_LIST EXCLUDED_MODULES)
